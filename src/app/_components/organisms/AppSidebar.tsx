@@ -1,7 +1,5 @@
 "use client";
 
-import NextImage from "next/image";
-
 import { LucideIcon, Plus, Workflow } from "lucide-react";
 
 import {
@@ -18,6 +16,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
 } from "../ui/sidebar";
+
+import { SidebarTrigger } from "../ui/sidebar";
 
 interface Item {
   title: string;
@@ -40,14 +40,8 @@ const itemsMenu: Item[] = [
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="flex items-center justify-center my-4">
-        <NextImage
-          src="/vercel.svg"
-          alt="Logo"
-          width={32}
-          height={32}
-          className="rounded"
-        />
+      <SidebarHeader>
+        <SidebarTrigger />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
