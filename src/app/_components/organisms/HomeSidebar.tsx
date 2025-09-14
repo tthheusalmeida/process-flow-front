@@ -117,8 +117,13 @@ export function HomeSidebar() {
                             className="cursor-pointer items-center"
                             asChild
                           >
-                            <div onClick={(e) => handleFlowClick(flow.id, e)}>
-                              <span>{flow.title}</span>
+                            <div
+                              onClick={(e) => handleFlowClick(flow.id, e)}
+                              className="flex items-center w-full"
+                            >
+                              <span className="truncate max-w-44">
+                                {flow.title}
+                              </span>
                               <span className="flow-item-dropdown">
                                 <FlowItemDropDown
                                   id={flow.id}
