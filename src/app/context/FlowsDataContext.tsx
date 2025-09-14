@@ -45,7 +45,7 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
   };
 
   const remove = async (id: string) => {
-    // TODO: Implementar remove
+    setFlows((prevFlows) => prevFlows.filter((flow) => flow.id !== id));
   };
 
   useEffect(() => {

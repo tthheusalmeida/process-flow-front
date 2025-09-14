@@ -19,11 +19,14 @@ import {
 } from "../ui/sidebar";
 
 import { SidebarTrigger } from "../ui/sidebar";
-import FlowItemDropDown from "../molecules/FlowItemDropDown";
-import { useFlowModal } from "../../context/FlowModalContext";
-import { useConfirmationModal } from "../../context/ConfirmationModalContext";
-import { useFlowsData } from "@/app/context/FlowsDataContext";
 import Loading from "../atoms/Loading";
+import FlowItemDropDown from "../molecules/FlowItemDropDown";
+
+import { useFlowModal } from "@/app/context/FlowModalContext";
+import { useConfirmationModal } from "@/app/context/ConfirmationModalContext";
+import { useFlowsData } from "@/app/context/FlowsDataContext";
+
+import { deleteFlow } from "@/app/services/flows";
 
 interface Item {
   title: string;
@@ -38,7 +41,7 @@ function handleSelectFlow(id: string) {
 export function HomeSidebar() {
   const { openModal } = useFlowModal();
   const { openConfirmation } = useConfirmationModal();
-  const { flows, isLoading: flowIsLoading } = useFlowsData();
+  const { flows, isLoading: flowIsLoading, remove } = useFlowsData();
 
   const handleCreateFlow = () => {
     openModal("create");
@@ -61,9 +64,9 @@ export function HomeSidebar() {
       confirmText: "Delete",
       cancelText: "Cancel",
       variant: "destructive",
-      onConfirm: () => {
-        console.log(`Delete flow: ${id}`);
-        // TODO: Implement delete logic
+      onConfirm: async () => {
+        await deleteFlow(id);
+        remove(id);
       },
     });
   };
