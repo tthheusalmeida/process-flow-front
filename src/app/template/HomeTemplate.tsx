@@ -6,6 +6,7 @@ import { SidebarProvider } from "../_components/ui/sidebar";
 import { FlowModalProvider } from "@/app/context/FlowModalContext";
 import { ConfirmationModalProvider } from "@/app/context/ConfirmationModalContext";
 import { FlowsDataProvider } from "@/app/context/FlowsDataContext";
+import Welcome from "../_components/organisms/Welcome";
 
 export default function HomeTemplate() {
   return (
@@ -15,8 +16,8 @@ export default function HomeTemplate() {
           <SidebarProvider>
             <HomeSidebar />
 
-            <main className="flex-1 p-4">
-              <h1>Welcome to the Home Page</h1>
+            <main className="flex-1">
+              <Welcome />
             </main>
 
             <FlowModal />
