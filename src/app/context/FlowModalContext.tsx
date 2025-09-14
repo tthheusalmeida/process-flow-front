@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
+import { createFlow } from "../services/flows";
+import { useFlowsData } from "./FlowsDataContext";
 
 interface IFlowData {
   id?: string;
@@ -36,6 +38,8 @@ interface FlowModalProviderProps {
 }
 
 export function FlowModalProvider({ children }: FlowModalProviderProps) {
+  const { add } = useFlowsData();
+
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const [flowData, setFlowData] = useState<IFlowData | null>(null);
@@ -61,15 +65,28 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
     }
   };
 
-  const handleSubmit = (data: IFlowData) => {
-    if (modalType === "create") {
-      console.log("Creating flow:", data);
-      // TODO: implements flow creation
-    } else if (modalType === "edit") {
-      console.log("Editing flow:", data);
-      // TODO: implements flow editing
+  const handleSubmit = async (data: IFlowData) => {
+    try {
+      if (modalType === "create") {
+        const newFlow = {
+          id: crypto.randomUUID(),
+          title: data.title,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        await createFlow(newFlow);
+        add(newFlow);
+      } else if (modalType === "edit" && data.id) {
+        console.log("Editing flow:", data);
+        // TODO: Integrar com useFlowsData
+        // await updateFlow(data.id, { title: data.title });
+      }
+      closeModal();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // TODO: add toast when error occurs (toast, etc.)
     }
-    closeModal();
   };
 
   return (

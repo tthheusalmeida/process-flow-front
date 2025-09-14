@@ -22,17 +22,13 @@ import { SidebarTrigger } from "../ui/sidebar";
 import FlowItemDropDown from "../molecules/FlowItemDropDown";
 import { useFlowModal } from "../../context/FlowModalContext";
 import { useConfirmationModal } from "../../context/ConfirmationModalContext";
-
-interface IFlowProps {
-  id: string;
-  title: string;
-}
+import { useFlowsData } from "@/app/context/FlowsDataContext";
+import Loading from "../atoms/Loading";
 
 interface Item {
   title: string;
   icon: LucideIcon;
   actionButton: React.ReactElement;
-  flows: IFlowProps[];
 }
 
 function handleSelectFlow(id: string) {
@@ -42,20 +38,21 @@ function handleSelectFlow(id: string) {
 export function HomeSidebar() {
   const { openModal } = useFlowModal();
   const { openConfirmation } = useConfirmationModal();
+  const { flows, isLoading: flowIsLoading } = useFlowsData();
 
   const handleCreateFlow = () => {
     openModal("create");
   };
 
   const handleEditFlow = (id: string) => {
-    const flowToEdit = itemsMenu[0].flows.find((flow) => flow.id === id);
+    const flowToEdit = flows.find((flow) => flow.id === id);
     if (flowToEdit) {
       openModal("edit", flowToEdit);
     }
   };
 
   const handleDeleteFlow = (id: string) => {
-    const flowToDelete = itemsMenu[0].flows.find((flow) => flow.id === id);
+    const flowToDelete = flows.find((flow) => flow.id === id);
     const flowName = flowToDelete?.title || "this flow";
 
     openConfirmation({
@@ -78,16 +75,6 @@ export function HomeSidebar() {
       actionButton: (
         <Plus className="cursor-pointer size-4" onClick={handleCreateFlow} />
       ),
-      flows: [
-        {
-          id: "1",
-          title: "Flow 1",
-        },
-        {
-          id: "2",
-          title: "Flow 2",
-        },
-      ],
     },
   ];
 
@@ -120,27 +107,31 @@ export function HomeSidebar() {
 
                   <SidebarMenuAction>{item.actionButton}</SidebarMenuAction>
 
-                  <SidebarMenuSub>
-                    {item.flows.map((flow) => (
-                      <SidebarMenuSubItem key={flow.id}>
-                        <SidebarMenuSubButton
-                          className="cursor-pointer items-center"
-                          asChild
-                        >
-                          <div onClick={(e) => handleFlowClick(flow.id, e)}>
-                            <span>{flow.title}</span>
-                            <span className="flow-item-dropdown">
-                              <FlowItemDropDown
-                                id={flow.id}
-                                handleEditFlow={handleEditFlow}
-                                handleDeleteFlow={handleDeleteFlow}
-                              />
-                            </span>
-                          </div>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
+                  {flowIsLoading ? (
+                    <Loading />
+                  ) : (
+                    <SidebarMenuSub>
+                      {flows.map((flow) => (
+                        <SidebarMenuSubItem key={flow.id}>
+                          <SidebarMenuSubButton
+                            className="cursor-pointer items-center"
+                            asChild
+                          >
+                            <div onClick={(e) => handleFlowClick(flow.id, e)}>
+                              <span>{flow.title}</span>
+                              <span className="flow-item-dropdown">
+                                <FlowItemDropDown
+                                  id={flow.id}
+                                  handleEditFlow={handleEditFlow}
+                                  handleDeleteFlow={handleDeleteFlow}
+                                />
+                              </span>
+                            </div>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
