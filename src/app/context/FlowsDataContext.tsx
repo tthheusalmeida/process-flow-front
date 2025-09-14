@@ -39,7 +39,9 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
   };
 
   const update = async (id: string, data: Partial<IFlow>) => {
-    // TODO: Implementar update
+    setFlows((prevFlows) =>
+      prevFlows.map((flow) => (flow.id === id ? { ...flow, ...data } : flow))
+    );
   };
 
   const remove = async (id: string) => {

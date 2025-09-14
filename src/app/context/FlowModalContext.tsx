@@ -1,8 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { createFlow } from "../services/flows";
+import { createFlow, updateFlow } from "../services/flows";
 import { useFlowsData } from "./FlowsDataContext";
+import { IFlow } from "@/app/services/flows";
 
 interface IFlowData {
   id?: string;
@@ -38,7 +39,7 @@ interface FlowModalProviderProps {
 }
 
 export function FlowModalProvider({ children }: FlowModalProviderProps) {
-  const { add } = useFlowsData();
+  const { add, update } = useFlowsData();
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType | null>(null);
@@ -68,7 +69,7 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
   const handleSubmit = async (data: IFlowData) => {
     try {
       if (modalType === "create") {
-        const newFlow = {
+        const newFlow: IFlow = {
           id: crypto.randomUUID(),
           title: data.title,
           createdAt: new Date(),
@@ -78,9 +79,8 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
         await createFlow(newFlow);
         add(newFlow);
       } else if (modalType === "edit" && data.id) {
-        console.log("Editing flow:", data);
-        // TODO: Integrar com useFlowsData
-        // await updateFlow(data.id, { title: data.title });
+        await updateFlow(data.id, { title: data.title });
+        update(data.id, { title: data.title });
       }
       closeModal();
     } catch (error) {

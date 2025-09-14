@@ -63,16 +63,16 @@ export async function createFlow(newData: IFlow) {
   return responseData;
 }
 
-export async function updateFlow(id: string, title: string) {
+export async function updateFlow(id: string, data: Partial<IFlow>) {
   const endPoint = `/flows/${id}`;
   const url = process.env.NEXT_PUBLIC_BASE_URL + endPoint;
 
   const response = await fetch(url, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({ ...data }),
   });
 
   throwErrorIfFailedToFetch(response.ok);
