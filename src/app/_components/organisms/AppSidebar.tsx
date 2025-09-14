@@ -1,6 +1,19 @@
 "use client";
 
-import { LucideIcon, Plus, Trash, Workflow } from "lucide-react";
+import {
+  LucideIcon,
+  Plus,
+  Trash,
+  Workflow,
+  Pencil,
+  MoreHorizontal,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "../ui/dropdown-menu";
 
 import {
   Sidebar,
@@ -15,9 +28,11 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "../ui/sidebar";
 
 import { SidebarTrigger } from "../ui/sidebar";
+import FlowItemDropDown from "../molecules/FlowItemDropDown";
 
 interface IFlowProps {
   id: string;
@@ -32,15 +47,19 @@ interface Item {
 }
 
 function handleSelectFlow(id: string) {
-  console.log(`Select process step: ${id}`);
+  console.log(`Selected flow: ${id}`);
 }
 
 function handleCreateFlow() {
   console.log("Should Open a modal to create a flow");
 }
 
+function handleEditFlow(id: string) {
+  console.log(`Edit flow: ${id}`);
+}
+
 function handleDeleteFlow(id: string) {
-  console.log(`Delete process step: ${id}`);
+  console.log(`Delete flow: ${id}`);
 }
 
 const itemsMenu: Item[] = [
@@ -49,7 +68,7 @@ const itemsMenu: Item[] = [
     icon: Workflow,
     actionButton: (
       <Plus
-        className="cursor-pointer size-4 hover:text-green-400 transition-colors duration-300"
+        className="cursor-pointer size-4"
         onClick={() => handleCreateFlow()}
       />
     ),
@@ -90,29 +109,23 @@ export function AppSidebar() {
 
                   <SidebarMenuSub>
                     {item.flows.map((flow) => (
-                      <SidebarMenuItem key={flow.id}>
+                      <SidebarMenuSubItem key={flow.id}>
                         <SidebarMenuSubButton
                           className="cursor-pointer items-center"
                           asChild
                         >
-                          <div
-                            className="flex items-center gap-4"
-                            onClick={() => handleSelectFlow(flow.id)}
-                          >
-                            {flow.title}
-
-                            <SidebarMenuAction>
-                              <Trash
-                                className="cursor-pointer size-4 hover:text-red-400 transition-colors duration-300 mb-0.5"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteFlow(flow.id);
-                                }}
+                          <div onClick={() => handleSelectFlow(flow.id)}>
+                            <span>{flow.title}</span>
+                            <span className="flow-item-dropdown">
+                              <FlowItemDropDown
+                                id={flow.id}
+                                handleEditFlow={handleEditFlow}
+                                handleDeleteFlow={handleDeleteFlow}
                               />
-                            </SidebarMenuAction>
+                            </span>
                           </div>
                         </SidebarMenuSubButton>
-                      </SidebarMenuItem>
+                      </SidebarMenuSubItem>
                     ))}
                   </SidebarMenuSub>
                 </SidebarMenuItem>
