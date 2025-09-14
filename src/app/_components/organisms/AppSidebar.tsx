@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideIcon, Plus, Workflow } from "lucide-react";
+import { LucideIcon, Plus, Trash, Workflow } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,21 +19,50 @@ import {
 
 import { SidebarTrigger } from "../ui/sidebar";
 
+interface IFlowProps {
+  id: string;
+  title: string;
+}
+
 interface Item {
   title: string;
-  onClick: () => void;
   icon: LucideIcon;
-  buttonIcon: LucideIcon;
+  actionButton: React.ReactElement;
+  flows: IFlowProps[];
+}
+
+function handleSelectFlow(id: string) {
+  console.log(`Select process step: ${id}`);
+}
+
+function handleCreateFlow() {
+  console.log("Should Open a modal to create a flow");
+}
+
+function handleDeleteFlow(id: string) {
+  console.log(`Delete process step: ${id}`);
 }
 
 const itemsMenu: Item[] = [
   {
-    title: "Process",
-    onClick: () => {
-      console.log("Should Open a modal to create a process");
-    },
+    title: "Flows",
     icon: Workflow,
-    buttonIcon: Plus,
+    actionButton: (
+      <Plus
+        className="cursor-pointer size-4 hover:text-green-400 transition-colors duration-300"
+        onClick={() => handleCreateFlow()}
+      />
+    ),
+    flows: [
+      {
+        id: "1",
+        title: "Flow 1",
+      },
+      {
+        id: "2",
+        title: "Flow 2",
+      },
+    ],
   },
 ];
 
@@ -57,20 +86,34 @@ export function AppSidebar() {
                     </div>
                   </SidebarMenuButton>
 
-                  <SidebarMenuAction>
-                    <item.buttonIcon
-                      className="cursor-pointer size-4"
-                      onClick={item.onClick}
-                    />
-                  </SidebarMenuAction>
+                  <SidebarMenuAction>{item.actionButton}</SidebarMenuAction>
 
                   <SidebarMenuSub>
-                    <SidebarMenuItem>
-                      <SidebarMenuSubButton>1</SidebarMenuSubButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuSubButton>1</SidebarMenuSubButton>
-                    </SidebarMenuItem>
+                    {item.flows.map((flow) => (
+                      <SidebarMenuItem key={flow.id}>
+                        <SidebarMenuSubButton
+                          className="cursor-pointer items-center"
+                          asChild
+                        >
+                          <div
+                            className="flex items-center gap-4"
+                            onClick={() => handleSelectFlow(flow.id)}
+                          >
+                            {flow.title}
+
+                            <SidebarMenuAction>
+                              <Trash
+                                className="cursor-pointer size-4 hover:text-red-400 transition-colors duration-300 mb-0.5"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteFlow(flow.id);
+                                }}
+                              />
+                            </SidebarMenuAction>
+                          </div>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuItem>
+                    ))}
                   </SidebarMenuSub>
                 </SidebarMenuItem>
               ))}
