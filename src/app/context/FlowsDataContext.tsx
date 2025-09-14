@@ -7,9 +7,11 @@ import { IFlow } from "@/app/services/flows";
 interface FlowsDataContextType {
   flows: IFlow[];
   isLoading: boolean;
+  selectedFlowId: string;
   add: (data: IFlow) => void;
-  update: (id: string, data: Partial<IFlow>) => Promise<void>;
-  remove: (id: string) => Promise<void>;
+  update: (id: string, data: Partial<IFlow>) => void;
+  remove: (id: string) => void;
+  setSelectedFlowId: (id: string) => void;
 }
 
 const FlowsDataContext = createContext<FlowsDataContextType | undefined>(
@@ -33,6 +35,7 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
 
   const [flows, setFlows] = useState<IFlow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedFlowId, setSelectedFlowId] = useState<string>("");
 
   const add = (data: IFlow) => {
     setFlows((prevFlows) => [...prevFlows, data]);
@@ -60,9 +63,11 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
       value={{
         flows,
         isLoading,
+        selectedFlowId,
         add,
         update,
         remove,
+        setSelectedFlowId,
       }}
     >
       {children}

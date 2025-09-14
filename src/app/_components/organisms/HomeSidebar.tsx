@@ -27,6 +27,7 @@ import { useConfirmationModal } from "@/app/context/ConfirmationModalContext";
 import { useFlowsData } from "@/app/context/FlowsDataContext";
 
 import { deleteFlow } from "@/app/services/flows";
+import { cn } from "@/lib/utils";
 
 interface Item {
   title: string;
@@ -34,14 +35,16 @@ interface Item {
   actionButton: React.ReactElement;
 }
 
-function handleSelectFlow(id: string) {
-  console.log(`Selected flow: ${id}`);
-}
-
 export function HomeSidebar() {
   const { openModal } = useFlowModal();
   const { openConfirmation } = useConfirmationModal();
-  const { flows, isLoading: flowIsLoading, remove } = useFlowsData();
+  const {
+    flows,
+    isLoading: flowIsLoading,
+    selectedFlowId,
+    remove,
+    setSelectedFlowId,
+  } = useFlowsData();
 
   const handleCreateFlow = () => {
     openModal("create");
@@ -70,6 +73,10 @@ export function HomeSidebar() {
       },
     });
   };
+
+  function handleSelectFlow(id: string) {
+    setSelectedFlowId(id);
+  }
 
   const itemsMenu: Item[] = [
     {
@@ -117,7 +124,12 @@ export function HomeSidebar() {
                       {flows.map((flow) => (
                         <SidebarMenuSubItem key={flow.id}>
                           <SidebarMenuSubButton
-                            className="cursor-pointer items-center"
+                            className={cn(
+                              "cursor-pointer items-center",
+                              selectedFlowId === flow.id
+                                ? "bg-neutral-500/10"
+                                : ""
+                            )}
                             asChild
                           >
                             <div
