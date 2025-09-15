@@ -35,6 +35,7 @@ import { NodeModalProvider } from "@/app/context/NodesModalContext";
 import { DepartmentEditModal } from "./DepartmentModal";
 import { OwnerEditModal } from "./OwnerModal";
 import { ProcessEditModal } from "./ProcessModal";
+import { DocumentEditModal } from "./DocumentModal";
 
 const { neutral } = colors;
 
@@ -145,8 +146,8 @@ export default function CustomReactFlow() {
         <DepartmentEditModal />
         <OwnerEditModal />
         <ProcessEditModal />
-        {/* <DepartmentEditModal />
-        <DepartmentEditModal /> */}
+        <DocumentEditModal />
+        {/* {/* <DepartmentEditModal /> */}
       </NodeModalProvider>
     </div>
   );
