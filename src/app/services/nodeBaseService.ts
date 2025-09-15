@@ -64,7 +64,7 @@ export class NodeBaseService<T> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    console.log(data);
+
     this.throwErrorIfFailedToFetch(response.ok);
 
     return await response.json();
