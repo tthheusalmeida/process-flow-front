@@ -122,7 +122,6 @@ export default function CustomReactFlow() {
       const sourceNode = nodes.find((node) => node.id === params.source);
       if (!sourceNode) return;
 
-      // 🔴 USA A FUNÇÃO DO UTILS
       const bestHandle = getBestProcessHandle(sourceNode, targetNode, edges);
 
       const connectionParams = {
@@ -131,7 +130,6 @@ export default function CustomReactFlow() {
       };
 
       setEdges((edgesSnapshot) => {
-        // Cria a connection com o handle correto
         const connectionWithHandle: Edge = {
           ...params,
           id: `${targetNode.id}-${sourceNode.id}`,
