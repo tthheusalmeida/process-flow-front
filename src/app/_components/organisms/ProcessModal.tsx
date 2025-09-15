@@ -16,28 +16,31 @@ import { Label } from "../ui/label";
 
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
+import { Textarea } from "../ui/textarea";
 
-export function OwnerEditModal() {
-  const { isOpenOwner, setIsOpenOwner, nodeModalId } = useNodeModal();
+export function ProcessEditModal() {
+  const { isOpenProcess, setIsOpenProcess, nodeModalId } = useNodeModal();
   const { nodes, updatePartialNodeData } = useNode();
 
   const index = nodes.findIndex((d) => d.id === nodeModalId);
-  const owner = nodes[index];
+  const process = nodes[index];
 
-  const [title, setTitle] = useState(() => (owner?.data.title as string) ?? "");
-  const [ownersText, setOwnersText] = useState(() =>
-    ((owner?.data.owners as string[]) ?? []).join(",")
+  const [title, setTitle] = useState(
+    () => (process?.data.title as string) ?? ""
+  );
+  const [description, setDescription] = useState(
+    () => (process?.data.description as string) ?? ""
   );
 
   useEffect(() => {
-    if (isOpenOwner && owner) {
-      setTitle((owner.data.title as string) ?? "");
-      setOwnersText(((owner.data.owners as string[]) ?? []).join(","));
+    if (isOpenProcess && process) {
+      setTitle((process.data.title as string) ?? "");
+      setDescription((process.data.description as string) ?? "");
     }
-  }, [isOpenOwner, owner]);
+  }, [isOpenProcess, process]);
 
   const closeModal = () => {
-    setIsOpenOwner(false);
+    setIsOpenProcess(false);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -45,21 +48,16 @@ export function OwnerEditModal() {
 
     if (!title.trim()) return;
 
-    const ownersArray = ownersText
-      .split(",")
-      .map((o) => o.trim())
-      .filter(Boolean);
-
-    updatePartialNodeData(owner.id, { title, owners: ownersArray });
-    setIsOpenOwner(false);
+    updatePartialNodeData(process.id, { title, description });
+    setIsOpenProcess(false);
   };
 
   return (
-    <Dialog open={isOpenOwner} onOpenChange={closeModal}>
+    <Dialog open={isOpenProcess} onOpenChange={closeModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Owner</DialogTitle>
-          <DialogDescription>Edit your Owner information</DialogDescription>
+          <DialogTitle>Edit Process</DialogTitle>
+          <DialogDescription>Edit your Process information</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -67,18 +65,18 @@ export function OwnerEditModal() {
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              placeholder="Enter flow title"
+              placeholder="Enter process title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
 
-            <Label htmlFor="owners">Owners</Label>
-            <Input
-              id="owners"
-              placeholder="Enter owners. (TIP: use ',' for multiple owners)"
-              value={ownersText}
-              onChange={(e) => setOwnersText(e.target.value)}
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="Enter process description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required
             />
           </div>

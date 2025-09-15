@@ -155,7 +155,7 @@ export default function BaseNode({
             "w-5/12 h-12 absolute flex items-start justify-center",
             "bg-neutral-900 text-neutral-200 font-semibold",
             "text-xs rounded-lg capitalize",
-            "group-hover:-top-6 top-0 -z-10",
+            "group-hover:-top-6 left-1 top-0 -z-10",
             "transition-all duration-300"
           )}
         >

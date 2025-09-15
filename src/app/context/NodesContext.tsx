@@ -51,13 +51,21 @@ const initialNodes: Node[] = [
     id: "process-1",
     type: "process",
     position: { x: 200, y: 120 },
-    data: { title: "Recrutamento", type: "process" },
+    data: {
+      title: "Recrutamento",
+      type: "process",
+      description: "Ah pao de queijo",
+    },
   },
   {
     id: "process-2",
     type: "process",
     position: { x: 400, y: 120 },
-    data: { title: "Aprovação", type: "process" },
+    data: {
+      title: "Aprovação",
+      type: "process",
+      description: "hoje eu so quero quebrar esse codigo",
+    },
   },
   {
     id: "document-1",
