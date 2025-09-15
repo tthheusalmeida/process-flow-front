@@ -2,29 +2,31 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Edge, Node } from "@xyflow/react";
 
+import { NODE_TYPES } from "@/lib/consts";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const getConnectionRules = (sourceType: string) => {
   switch (sourceType) {
-    case "department":
-    case "owner":
+    case NODE_TYPES.DEPARTMENT:
+    case NODE_TYPES.OWNER:
       // Department and Owner connect BELOW the process (come from above)
       return {
         preferredHandle: "top",
         reasoning: `${sourceType} connects at the top of the process`,
       };
 
-    case "document":
-    case "tool":
+    case NODE_TYPES.DOCUMENT:
+    case NODE_TYPES.TOOL:
       // Document e Tool connect ABOVE the process (come from below)
       return {
         preferredHandle: "bottom",
         reasoning: `${sourceType} connects below the process`,
       };
 
-    case "process":
+    case NODE_TYPES.PROCESS:
       // Processes connect to each other laterally
       return {
         preferredHandle: "left",
@@ -44,7 +46,7 @@ export const getBestProcessHandle = (
   targetNode: Node,
   existingEdges: Edge[]
 ) => {
-  if (targetNode.type !== "process") return undefined;
+  if (targetNode.type !== NODE_TYPES.PROCESS) return undefined;
 
   const connectionRule = getConnectionRules(sourceNode.data.type as string);
 
@@ -85,9 +87,10 @@ export const getBestProcessHandle = (
   // For document/tool, only consider the bottom.
   // For department/process, only consider the left.
   const allowedHandles =
-    sourceNode.data.type === "owner"
+    sourceNode.data.type === NODE_TYPES.OWNER
       ? ["top"]
-      : sourceNode.data.type === "document" || sourceNode.data.type === "tool"
+      : sourceNode.data.type === NODE_TYPES.DOCUMENT ||
+        sourceNode.data.type === NODE_TYPES.TOOL
       ? ["bottom"]
       : ["left"];
 

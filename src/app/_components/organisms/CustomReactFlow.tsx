@@ -32,15 +32,18 @@ import { OwnerEditModal } from "./OwnerModal";
 import { ProcessEditModal } from "./ProcessModal";
 import { DocumentEditModal } from "./DocumentModal";
 import { ToolEditModal } from "./ToolModal";
+import { BottomToolbar } from "./BottomToolbar";
 
 const { neutral } = colors;
 
-const NODE_TYPES = {
-  owner: NodeOwner,
-  process: NodeProcess,
-  department: NodeDepartment,
-  tool: NodeTool,
-  document: NodeDocument,
+import { NODE_TYPES } from "@/lib/consts";
+
+const NODE_TYPES_MODAL = {
+  [NODE_TYPES.DEPARTMENT]: NodeDepartment,
+  [NODE_TYPES.DOCUMENT]: NodeDocument,
+  [NODE_TYPES.OWNER]: NodeOwner,
+  [NODE_TYPES.PROCESS]: NodeProcess,
+  [NODE_TYPES.TOOL]: NodeTool,
 };
 
 const EDGE_TYPES = {
@@ -55,7 +58,7 @@ export default function CustomReactFlow() {
     (params: Connection) => {
       // Validation: only allow connections TO process nodes
       const targetNode = nodes.find((node) => node.id === params.target);
-      if (targetNode?.type !== "process") {
+      if (targetNode?.type !== NODE_TYPES.PROCESS) {
         console.log("❌ Connections are only allowed to process nodes");
         return;
       }
@@ -113,11 +116,11 @@ export default function CustomReactFlow() {
   );
 
   return (
-    <div className="w-full h-screen bg-zinc-800">
+    <div className="w-full h-screen bg-zinc-800 relative">
       <NodeModalProvider>
         <ReactFlow
           colorMode="dark"
-          nodeTypes={NODE_TYPES}
+          nodeTypes={NODE_TYPES_MODAL}
           edgeTypes={EDGE_TYPES}
           nodes={nodes}
           edges={edges}
@@ -145,6 +148,8 @@ export default function CustomReactFlow() {
         <ProcessEditModal />
         <ToolEditModal />
       </NodeModalProvider>
+
+      <BottomToolbar />
     </div>
   );
 }

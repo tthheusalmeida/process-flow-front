@@ -1,7 +1,7 @@
 import "@xyflow/react/dist/style.css";
 import { Handle, Position } from "@xyflow/react";
-import React, { useState } from "react";
-import { Columns, LucideIcon } from "lucide-react";
+import React from "react";
+import { LucideIcon } from "lucide-react";
 import BaseNodeHeader from "./BaseNodeHeader";
 import { cn } from "@/lib/utils";
 import { useConfirmationModal } from "@/app/context/ConfirmationModalContext";
@@ -9,13 +9,14 @@ import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
 import { useNodeModal } from "@/app/context/NodesModalContext";
 
-// Mapeamento de cores para os handles
-const TYPE_HANDLE_COLORS: Record<string, string> = {
-  department: "#16a34a", // green-600
-  document: "#ca8a04", // yellow-600
-  owner: "#2563eb", // blue-600
-  process: "#7c3aed", // violet-600
-  tool: "#52525b", // zinc-600
+import { NODE_TYPES } from "@/lib/consts";
+
+export const TYPE_HANDLE_COLORS: Record<string, string> = {
+  [NODE_TYPES.DEPARTMENT]: "#16a34a", // green-600
+  [NODE_TYPES.DOCUMENT]: "#ca8a04", // yellow-600
+  [NODE_TYPES.OWNER]: "#2563eb", // blue-600
+  [NODE_TYPES.PROCESS]: "#7c3aed", // violet-600
+  [NODE_TYPES.TOOL]: "#52525b", // zinc-600
 };
 
 interface BaseNodeProps {
@@ -59,14 +60,16 @@ export default function BaseNode({
   } = useNodeModal();
 
   const MODAL_TYPE: Record<string, (value: boolean) => void> = {
-    department: setIsOpenDepartment,
-    owner: setIsOpenOwner,
-    document: setIsOpenDocument,
-    process: setIsOpenProcess,
-    tool: setIsOpenTool,
+    [NODE_TYPES.DEPARTMENT]: setIsOpenDepartment,
+    [NODE_TYPES.DOCUMENT]: setIsOpenDocument,
+    [NODE_TYPES.OWNER]: setIsOpenOwner,
+    [NODE_TYPES.PROCESS]: setIsOpenProcess,
+    [NODE_TYPES.TOOL]: setIsOpenTool,
   };
 
   const handleEdit = () => {
+    console.log(data.type);
+
     MODAL_TYPE[data.type as string](true);
     setNodeModalId(id);
   };
@@ -119,7 +122,7 @@ export default function BaseNode({
         {customHandles || (
           <>
             {/* Owner: apenas handle na parte de BAIXO */}
-            {nodeType === "owner" && (
+            {nodeType === NODE_TYPES.OWNER && (
               <Handle
                 type="source"
                 position={Position.Bottom}
@@ -129,7 +132,7 @@ export default function BaseNode({
             )}
 
             {/* Department: apenas handle na parte da direita */}
-            {nodeType === "department" && (
+            {nodeType === NODE_TYPES.DEPARTMENT && (
               <Handle
                 type="source"
                 position={Position.Right}
@@ -139,7 +142,8 @@ export default function BaseNode({
             )}
 
             {/* Document e Tool: apenas handle na parte de CIMA */}
-            {(nodeType === "document" || nodeType === "tool") && (
+            {(nodeType === NODE_TYPES.DOCUMENT ||
+              nodeType === NODE_TYPES.TOOL) && (
               <Handle
                 type="source"
                 position={Position.Top}
