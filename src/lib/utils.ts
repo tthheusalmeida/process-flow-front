@@ -81,11 +81,11 @@ export const getBestProcessHandle = (
   let minConnections =
     handleConnections[preferredHandle as keyof typeof handleConnections];
 
-  // For department/owner, only consider the top.
+  // For owner, only consider the top.
   // For document/tool, only consider the bottom.
-  // For process, only consider the left.
+  // For department/process, only consider the left.
   const allowedHandles =
-    sourceNode.data.type === "department" || sourceNode.data.type === "owner"
+    sourceNode.data.type === "owner"
       ? ["top"]
       : sourceNode.data.type === "document" || sourceNode.data.type === "tool"
       ? ["bottom"]

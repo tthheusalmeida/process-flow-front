@@ -29,70 +29,10 @@ import NodeDocument from "../molecules/NodeDocument";
 
 import { getBestProcessHandle } from "@/lib/utils";
 
+import { useNode } from "@/app/context/NodesContext";
+import { useEdge } from "@/app/context/EdgesContext";
+
 const { neutral } = colors;
-
-const initialNodes: Node[] = [
-  // Department no topo
-  {
-    id: "department-1",
-    type: "department",
-    position: { x: 200, y: 0 },
-    data: { title: "RH", type: "department" },
-  },
-  // Owner ao lado do department
-  {
-    id: "owner-1",
-    type: "owner",
-    position: { x: 350, y: 0 },
-    data: { title: "CEO", type: "owner" },
-  },
-  // Process no meio
-  {
-    id: "process-1",
-    type: "process",
-    position: { x: 200, y: 120 },
-    data: { title: "Recrutamento", type: "process" },
-  },
-  // Outro process para testar conexões processo->processo
-  {
-    id: "process-2",
-    type: "process",
-    position: { x: 400, y: 120 },
-    data: { title: "Aprovação", type: "process" },
-  },
-  // Document e Tool embaixo
-  {
-    id: "document-1",
-    type: "document",
-    position: { x: 150, y: 240 },
-    data: { title: "Manual", type: "document" },
-  },
-  {
-    id: "tool-1",
-    type: "tool",
-    position: { x: 300, y: 240 },
-    data: { title: "Slack", type: "tool" },
-  },
-];
-
-const initialEdges: Edge[] = [
-  {
-    type: "default",
-    source: "department-1",
-    target: "process-1",
-    targetHandle: "top",
-    id: "process-1-department-1",
-    selected: false,
-  },
-  {
-    type: "default",
-    source: "document-1",
-    target: "process-1",
-    targetHandle: "bottom",
-    id: "process-1-document-1",
-    selected: false,
-  },
-];
 
 const NODE_TYPES = {
   owner: NodeOwner,
@@ -107,8 +47,8 @@ const EDGE_TYPES = {
 };
 
 export default function CustomReactFlow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { nodes, onNodesChange } = useNode();
+  const { edges, setEdges, onEdgesChange } = useEdge();
 
   const onConnect = useCallback(
     (params: Connection) => {
