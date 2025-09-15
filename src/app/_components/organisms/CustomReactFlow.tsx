@@ -24,13 +24,15 @@ import { CustomEdge } from "../molecules/CustomEdge";
 import NodeProcess from "../molecules/NodeProcess";
 import NodeOwner from "../molecules/NodeOwner";
 import NodeDepartment from "../molecules/NodeDepartment";
-import NodeTool from "../molecules/NodeTools";
+import NodeTool from "../molecules/NodeTool";
 import NodeDocument from "../molecules/NodeDocument";
 
 import { getBestProcessHandle } from "@/lib/utils";
 
 import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
+import { NodeModalProvider } from "@/app/context/NodesModalContext";
+import { DepartmentEditModal } from "./DepartmentModal";
 
 const { neutral } = colors;
 
@@ -111,33 +113,39 @@ export default function CustomReactFlow() {
     [onEdgesChange]
   );
 
-  console.log("Edge: ", edges);
-
   return (
     <div className="w-full h-screen bg-zinc-800">
-      <ReactFlow
-        colorMode="dark"
-        nodeTypes={NODE_TYPES}
-        edgeTypes={EDGE_TYPES}
-        nodes={nodes}
-        edges={edges}
-        proOptions={{ hideAttribution: true }}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={handleEdgesChange}
-        onConnect={onConnect}
-        connectionMode={ConnectionMode.Loose}
-        defaultEdgeOptions={{ type: "default" }}
-        fitView
-        className="bg-zinc-800"
-      >
-        <Background
-          gap={12}
-          size={1}
-          color={neutral[700]}
-          bgColor={neutral[800]}
-        />
-        <Controls className="fill-white" />
-      </ReactFlow>
+      <NodeModalProvider>
+        <ReactFlow
+          colorMode="dark"
+          nodeTypes={NODE_TYPES}
+          edgeTypes={EDGE_TYPES}
+          nodes={nodes}
+          edges={edges}
+          proOptions={{ hideAttribution: true }}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
+          onConnect={onConnect}
+          connectionMode={ConnectionMode.Loose}
+          defaultEdgeOptions={{ type: "default" }}
+          fitView
+          className="bg-zinc-800"
+        >
+          <Background
+            gap={12}
+            size={1}
+            color={neutral[700]}
+            bgColor={neutral[800]}
+          />
+          <Controls className="fill-white" />
+        </ReactFlow>
+
+        <DepartmentEditModal />
+        {/* <DepartmentEditModal />
+        <DepartmentEditModal />
+        <DepartmentEditModal />
+        <DepartmentEditModal /> */}
+      </NodeModalProvider>
     </div>
   );
 }

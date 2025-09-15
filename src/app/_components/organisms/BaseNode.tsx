@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useConfirmationModal } from "@/app/context/ConfirmationModalContext";
 import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
+import { useNodeModal } from "@/app/context/NodesModalContext";
 
 // Mapeamento de cores para os handles
 const TYPE_HANDLE_COLORS: Record<string, string> = {
@@ -45,15 +46,29 @@ export default function BaseNode({
   children,
   customHandles,
 }: BaseNodeProps) {
-  const [showEditModal, setShowEditModal] = useState(false);
-  const { nodes, setNodes } = useNode();
-  const { edges, setEdges } = useEdge();
+  const { setNodes } = useNode();
+  const { setEdges } = useEdge();
   const { openConfirmation } = useConfirmationModal();
+  const {
+    setIsOpenDepartment,
+    setIsOpenOwner,
+    setIsOpenDocument,
+    setIsOpenProcess,
+    setIsOpenTool,
+    setNodeModalId,
+  } = useNodeModal();
+
+  const MODAL_TYPE: Record<string, (value: boolean) => void> = {
+    department: setIsOpenDepartment,
+    owner: setIsOpenOwner,
+    document: setIsOpenDocument,
+    process: setIsOpenProcess,
+    tool: setIsOpenTool,
+  };
 
   const handleEdit = () => {
-    // setShowEditModal(true);
-    // TODO: open edit modal with specific form for node type
-    console.log(`📝 Opening edit modal for ${data.type} ${id}`);
+    MODAL_TYPE[data.type as string](true);
+    setNodeModalId(id);
   };
 
   const handleDelete = () => {
@@ -70,18 +85,6 @@ export default function BaseNode({
         setNodes((prev) => prev.filter((node) => node.id !== id));
       },
     });
-  };
-
-  console.log("EDGES: ", edges);
-
-  const confirmDelete = () => {
-    // setShowDeleteModal(false);
-    // TODO: delete node from database and react flow
-    console.log(`🗑️ Deleting ${data.type} ${id}`);
-  };
-
-  const cancelDelete = () => {
-    // setShowDeleteModal(false);
   };
 
   const handleColor = TYPE_HANDLE_COLORS[data.type!] || "#52525b";
@@ -159,26 +162,6 @@ export default function BaseNode({
           <span className="mt-1">{nodeType}</span>
         </div>
       </div>
-
-      {/* TODO: Modal de Edição será implementado por tipo */}
-      {showEditModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-2 text-black">
-              Editar {data.type}
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Modal de edição para {data.type} será implementado aqui
-            </p>
-            <button
-              onClick={() => setShowEditModal(false)}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Fechar
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

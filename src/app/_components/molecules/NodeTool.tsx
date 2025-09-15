@@ -14,18 +14,6 @@ export default function NodeTool({ data, id }: NodeProps) {
     ...data,
   };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        size={8}
-        className={
-          i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-        }
-      />
-    ));
-  };
-
   const openUrl = () => {
     if (tool.url) {
       // TODO: open tool URL
