@@ -1,5 +1,6 @@
 import { EdgeProps, getSimpleBezierPath } from "@xyflow/react";
 import { X } from "lucide-react";
+import { useState } from "react";
 
 export function CustomEdge({
   id,
@@ -8,6 +9,7 @@ export function CustomEdge({
   targetX,
   targetY,
 }: EdgeProps) {
+  const [hovered, setHovered] = useState(false);
   const [edgePath] = getSimpleBezierPath({
     sourceX,
     sourceY,
@@ -21,27 +23,32 @@ export function CustomEdge({
   };
 
   return (
-    <>
+    <g
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <path
         id={id}
-        className="react-flow__edge-path stroke-2 stroke-zinc-400"
         d={edgePath}
+        className="react-flow__edge-path !stroke-2 stroke-zinc-400"
+        style={{ pointerEvents: "stroke" }}
       />
-      <foreignObject
-        width={40}
-        height={40}
-        x={(sourceX + targetX) / 2 - 20}
-        y={(sourceY + targetY) / 2 - 20}
-        className="edgebutton-foreignobject"
-        requiredExtensions="http://www.w3.org/1999/xhtml"
-      >
-        <button
-          className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-          onClick={onEdgeDelete}
+      {hovered && (
+        <foreignObject
+          width={40}
+          height={40}
+          x={(sourceX + targetX) / 2 - 20}
+          y={(sourceY + targetY) / 2 - 20}
+          requiredExtensions="http://www.w3.org/1999/xhtml"
         >
-          <X size={12} />
-        </button>
-      </foreignObject>
-    </>
+          <button
+            className="w-4 h-4 bg-neutral-700 hover:bg-red-600/10 text-red-400 rounded-full flex items-center justify-center text-xs transition-colors"
+            onClick={onEdgeDelete}
+          >
+            <X size={10} />
+          </button>
+        </foreignObject>
+      )}
+    </g>
   );
 }
