@@ -17,46 +17,51 @@ import { Label } from "../ui/label";
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
 
-export function DepartmentEditModal() {
-  const { isOpenDepartment, setIsOpenDepartment, nodeModalId } = useNodeModal();
+export function OwnerEditModal() {
+  const { isOpenOwner, setIsOpenOwner, nodeModalId } = useNodeModal();
   const { nodes, updatePartialNodeData } = useNode();
 
   const index = nodes.findIndex((d) => d.id === nodeModalId);
-  const department = nodes[index];
+  const owner = nodes[index];
 
-  const [title, setTitle] = useState<string>(
-    () => (department?.data.title as string) ?? ""
+  console.log(owner);
+
+  const [title, setTitle] = useState(() => (owner?.data.title as string) ?? "");
+  const [ownersText, setOwnersText] = useState(() =>
+    ((owner?.data.owners as string[]) ?? []).join(",")
   );
 
   useEffect(() => {
-    if (isOpenDepartment && department) {
-      setTitle((department.data.title as string) ?? "");
+    if (isOpenOwner && owner) {
+      setTitle((owner.data.title as string) ?? "");
+      setOwnersText(((owner.data.owners as string[]) ?? []).join(","));
     }
-  }, [isOpenDepartment, department]);
+  }, [isOpenOwner, owner]);
 
   const closeModal = () => {
-    setIsOpenDepartment(false);
+    setIsOpenOwner(false);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) {
-      return;
-    }
+    if (!title.trim()) return;
 
-    updatePartialNodeData(department.id, { title });
-    setIsOpenDepartment(false);
+    const ownersArray = ownersText
+      .split(",")
+      .map((o) => o.trim())
+      .filter(Boolean);
+
+    updatePartialNodeData(owner.id, { title, owners: ownersArray });
+    setIsOpenOwner(false);
   };
 
   return (
-    <Dialog open={isOpenDepartment} onOpenChange={closeModal}>
+    <Dialog open={isOpenOwner} onOpenChange={closeModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Department</DialogTitle>
-          <DialogDescription>
-            Edit your Department information
-          </DialogDescription>
+          <DialogTitle>Edit Owner</DialogTitle>
+          <DialogDescription>Edit your Owner information</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -67,6 +72,15 @@ export function DepartmentEditModal() {
               placeholder="Enter flow title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+
+            <Label htmlFor="owners">Owners</Label>
+            <Input
+              id="owners"
+              placeholder="Enter owners. (TIP: use ',' for multiple owners)"
+              value={ownersText}
+              onChange={(e) => setOwnersText(e.target.value)}
               required
             />
           </div>

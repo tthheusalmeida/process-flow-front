@@ -33,6 +33,7 @@ import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
 import { NodeModalProvider } from "@/app/context/NodesModalContext";
 import { DepartmentEditModal } from "./DepartmentModal";
+import { OwnerEditModal } from "./OwnerModal";
 
 const { neutral } = colors;
 
@@ -141,8 +142,8 @@ export default function CustomReactFlow() {
         </ReactFlow>
 
         <DepartmentEditModal />
+        <OwnerEditModal />
         {/* <DepartmentEditModal />
-        <DepartmentEditModal />
         <DepartmentEditModal />
         <DepartmentEditModal /> */}
       </NodeModalProvider>

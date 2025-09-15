@@ -44,10 +44,7 @@ const initialNodes: Node[] = [
     data: {
       title: "CEO",
       type: "owner",
-      owners: [
-        { id: "1", name: "Ana Silva", role: "Gerente" },
-        { id: "2", name: "João Santos", role: "Analista" },
-      ],
+      owners: ["Ana Silva", "João Santos"],
     },
   },
   {
