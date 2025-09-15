@@ -48,7 +48,7 @@ export default function BaseNode({
 
   return (
     <div
-      className={`w-[120px] h-[80px] border-2 border-zinc-900 ${colorClass} rounded flex flex-col items-center justify-center p-2 relative group`}
+      className={`w-[120px] h-[80px] ${colorClass} rounded flex flex-col items-center justify-center p-2 relative group`}
     >
       {(nodeType === "department" || nodeType === "owner") && (
         <Handle

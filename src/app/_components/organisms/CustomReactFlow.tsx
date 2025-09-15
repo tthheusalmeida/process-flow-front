@@ -75,7 +75,24 @@ const initialNodes: Node[] = [
   },
 ];
 
-const initialEdges: Edge[] = [];
+const initialEdges: Edge[] = [
+  {
+    type: "default",
+    source: "department-1",
+    target: "process-1",
+    targetHandle: "top",
+    id: "process-1-department-1",
+    selected: false,
+  },
+  {
+    type: "default",
+    source: "document-1",
+    target: "process-1",
+    targetHandle: "bottom",
+    id: "process-1-document-1",
+    selected: false,
+  },
+];
 
 const NODE_TYPES = {
   owner: NodeOwner,
@@ -155,6 +172,8 @@ export default function CustomReactFlow() {
     },
     [onEdgesChange]
   );
+
+  console.log("Edge: ", edges);
 
   return (
     <div className="w-full h-screen bg-zinc-800">
