@@ -18,70 +18,68 @@ import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
 import { Trash } from "lucide-react";
 
-interface LinkItem {
-  label: string;
-  link: string;
+interface ToolItem {
+  title: string;
+  description: string;
 }
 
-export function DocumentEditModal() {
-  const { isOpenDocument, setIsOpenDocument, nodeModalId } = useNodeModal();
+export function ToolEditModal() {
+  const { isOpenTool, setIsOpenTool, nodeModalId } = useNodeModal();
   const { nodes, updatePartialNodeData } = useNode();
 
   const index = nodes.findIndex((d) => d.id === nodeModalId);
-  const document = nodes[index];
+  const tool = nodes[index];
 
   const [title, setTitle] = useState<string>(
-    () => (document?.data.title as string) ?? ""
+    () => (tool?.data.title as string) ?? ""
   );
-  const [links, setLinks] = useState<LinkItem[]>(
-    () => (document?.data.links as LinkItem[]) ?? []
+  const [tools, setTools] = useState<ToolItem[]>(
+    () => (tool?.data.tools as ToolItem[]) ?? []
   );
 
   useEffect(() => {
-    if (isOpenDocument && document) {
-      setTitle((document.data.title as string) ?? "");
-      setLinks((document.data.links as LinkItem[]) ?? []);
+    if (isOpenTool && tool) {
+      setTitle((tool.data.title as string) ?? "");
+      setTools((tool.data.tools as ToolItem[]) ?? []);
     }
-  }, [isOpenDocument, document]);
+  }, [isOpenTool, tool]);
 
-  const handleLinkChange = (
+  const handleToolChange = (
     index: number,
-    field: keyof LinkItem,
+    field: keyof ToolItem,
     value: string
   ) => {
-    setLinks((prev) =>
+    setTools((prev) =>
       prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
     );
   };
 
-  const addLink = () => {
-    setLinks((prev) => [...prev, { label: "", link: "" }]);
+  const addTool = () => {
+    setTools((prev) => [...prev, { title: "", description: "" }]);
   };
 
-  const removeLink = (index: number) => {
-    setLinks((prev) => prev.filter((_, i) => i !== index));
+  const removeTool = (index: number) => {
+    setTools((prev) => prev.filter((_, i) => i !== index));
   };
-
   const closeModal = () => {
-    setIsOpenDocument(false);
+    setIsOpenTool(false);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const filteredLinks = links.filter((l) => l.label && l.link);
+    const filteredTools = tools.filter((t) => t.title && t.description);
 
-    updatePartialNodeData(document.id, { title, links: filteredLinks });
-    setIsOpenDocument(false);
+    updatePartialNodeData(tool.id, { title, tools: filteredTools });
+    setIsOpenTool(false);
   };
-
   return (
-    <Dialog open={isOpenDocument} onOpenChange={closeModal}>
+    <Dialog open={isOpenTool} onOpenChange={closeModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Document</DialogTitle>
-          <DialogDescription>Edit your Document information</DialogDescription>
+          <DialogTitle>Edit Tool</DialogTitle>
+          <DialogDescription>Edit your Tool information</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -96,36 +94,36 @@ export function DocumentEditModal() {
             />
 
             <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
-              <Label>Links</Label>
-              {links.map((item, index) => (
+              <Label>Tools</Label>
+              {tools.map((item, index) => (
                 <div key={index} className="flex gap-2">
                   <Input
-                    placeholder="Label"
-                    value={item.label}
+                    placeholder="Tool Title"
+                    value={item.title}
                     onChange={(e) =>
-                      handleLinkChange(index, "label", e.target.value)
+                      handleToolChange(index, "title", e.target.value)
                     }
                     required
                   />
                   <Input
-                    placeholder="Link"
-                    value={item.link}
+                    placeholder="Tool Description"
+                    value={item.description}
                     onChange={(e) =>
-                      handleLinkChange(index, "link", e.target.value)
+                      handleToolChange(index, "description", e.target.value)
                     }
                     required
                   />
                   <Button
                     type="button"
                     variant="destructive"
-                    onClick={() => removeLink(index)}
+                    onClick={() => removeTool(index)}
                   >
                     <Trash size={16} />
                   </Button>
                 </div>
               ))}
-              <Button type="button" onClick={addLink}>
-                Add Link
+              <Button type="button" onClick={addTool}>
+                Add Tool
               </Button>
             </div>
           </div>

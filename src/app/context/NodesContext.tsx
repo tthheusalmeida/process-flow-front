@@ -86,7 +86,11 @@ const initialNodes: Node[] = [
     id: "tool-1",
     type: "tool",
     position: { x: 300, y: 240 },
-    data: { title: "Slack", type: "tool", description: "Gestão de candidatos" },
+    data: {
+      title: "MAVEN",
+      type: "tool",
+      tools: [{ title: "Slack", description: "Gestão de candidatos" }],
+    },
   },
 ];
 

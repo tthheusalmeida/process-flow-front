@@ -4,21 +4,18 @@ import { useCallback } from "react";
 import {
   ReactFlow,
   addEdge,
-  Node,
   Edge,
   Connection,
   Background,
   Controls,
   ConnectionMode,
-  useEdgesState,
-  useNodesState,
   NodeChange,
   EdgeChange,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
-
 import colors from "tailwindcss/colors";
+import { getBestProcessHandle } from "@/lib/utils";
 
 import { CustomEdge } from "../molecules/CustomEdge";
 import NodeProcess from "../molecules/NodeProcess";
@@ -27,8 +24,6 @@ import NodeDepartment from "../molecules/NodeDepartment";
 import NodeTool from "../molecules/NodeTool";
 import NodeDocument from "../molecules/NodeDocument";
 
-import { getBestProcessHandle } from "@/lib/utils";
-
 import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
 import { NodeModalProvider } from "@/app/context/NodesModalContext";
@@ -36,6 +31,7 @@ import { DepartmentEditModal } from "./DepartmentModal";
 import { OwnerEditModal } from "./OwnerModal";
 import { ProcessEditModal } from "./ProcessModal";
 import { DocumentEditModal } from "./DocumentModal";
+import { ToolEditModal } from "./ToolModal";
 
 const { neutral } = colors;
 
@@ -144,10 +140,10 @@ export default function CustomReactFlow() {
         </ReactFlow>
 
         <DepartmentEditModal />
+        <DocumentEditModal />
         <OwnerEditModal />
         <ProcessEditModal />
-        <DocumentEditModal />
-        {/* {/* <DepartmentEditModal /> */}
+        <ToolEditModal />
       </NodeModalProvider>
     </div>
   );
