@@ -26,7 +26,7 @@ import { useFlowModal } from "@/app/context/FlowModalContext";
 import { useConfirmationModal } from "@/app/context/ConfirmationModalContext";
 import { useFlowsData } from "@/app/context/FlowsDataContext";
 
-import { deleteFlow } from "@/app/services/flows";
+import { flowsService } from "@/app/services/flows";
 import { cn } from "@/lib/utils";
 
 interface Item {
@@ -68,7 +68,7 @@ export function HomeSidebar() {
       cancelText: "Cancel",
       variant: "destructive",
       onConfirm: async () => {
-        await deleteFlow(id);
+        await flowsService.deleteData(id);
         remove(id);
       },
     });

@@ -9,6 +9,12 @@ import { useNode } from "@/app/context/NodesContext";
 import { useEdge } from "@/app/context/EdgesContext";
 import { useNodeModal } from "@/app/context/NodesModalContext";
 
+import { departmentsService } from "@/app/services/departments";
+import { documentsService } from "@/app/services/documents";
+import { ownerService } from "@/app/services/owners";
+import { processesService } from "@/app/services/processes";
+import { toolsService } from "@/app/services/tools";
+
 import { NODE_TYPES } from "@/lib/consts";
 
 export const TYPE_HANDLE_COLORS: Record<string, string> = {
@@ -35,6 +41,18 @@ interface BaseNodeProps {
   children?: React.ReactNode;
   customHandles?: React.ReactNode;
 }
+
+const getCorrectService = (type: string) => {
+  let service;
+
+  if (type === NODE_TYPES.DEPARTMENT) service = departmentsService;
+  else if (type === NODE_TYPES.DOCUMENT) service = documentsService;
+  else if (type === NODE_TYPES.OWNER) service = ownerService;
+  else if (type === NODE_TYPES.PROCESS) service = processesService;
+  else service = toolsService;
+
+  return service;
+};
 
 export default function BaseNode({
   data,
@@ -68,8 +86,6 @@ export default function BaseNode({
   };
 
   const handleEdit = () => {
-    console.log(data.type);
-
     MODAL_TYPE[data.type as string](true);
     setNodeModalId(id);
   };
@@ -86,6 +102,9 @@ export default function BaseNode({
           prev.filter((edge) => edge.source !== id && edge.target !== id)
         );
         setNodes((prev) => prev.filter((node) => node.id !== id));
+
+        const service = getCorrectService(data.type as string);
+        await service.deleteData(id);
       },
     });
   };

@@ -10,7 +10,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getConnectionRules = (sourceType: string) => {
   switch (sourceType) {
-    case NODE_TYPES.DEPARTMENT:
     case NODE_TYPES.OWNER:
       // Department and Owner connect BELOW the process (come from above)
       return {
@@ -27,6 +26,7 @@ export const getConnectionRules = (sourceType: string) => {
       };
 
     case NODE_TYPES.PROCESS:
+    case NODE_TYPES.DEPARTMENT:
       // Processes connect to each other laterally
       return {
         preferredHandle: "left",

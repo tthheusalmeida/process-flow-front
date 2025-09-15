@@ -7,28 +7,47 @@ import { useNode } from "@/app/context/NodesContext";
 
 import { NODE_TYPES } from "@/lib/consts";
 
+import { documentsService } from "@/app/services/documents";
+import { departmentsService } from "@/app/services/departments";
+import { ownerService } from "@/app/services/owners";
+import { processesService } from "@/app/services/processes";
+import { toolsService } from "@/app/services/tools";
+import { useFlowsData } from "@/app/context/FlowsDataContext";
+
 interface BottomToolbarProps {
   className?: string;
 }
 
+const DEFAULT_POSITION = { x: 0, y: 0 };
+
 export function BottomToolbar({ className }: BottomToolbarProps) {
   const { setNodes } = useNode();
+  const { selectedFlowId } = useFlowsData();
 
-  const handleCreateNewNode = (options: {
+  const handleCreateNewNode = async (options: {
     type: string;
     data: Record<string, unknown>;
+    position: { x: number; y: number };
   }) => {
-    const { type, data } = options;
+    const { type, data, position } = options;
 
-    setNodes((nodes) => [
-      ...nodes,
-      {
-        id: crypto.randomUUID(),
-        position: { x: 0, y: 0 },
-        type,
-        data,
-      },
-    ]);
+    const newNode = {
+      id: crypto.randomUUID(),
+      flowId: selectedFlowId,
+      position,
+      type,
+      data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    if (NODE_TYPES.DEPARTMENT) await documentsService.createData(newNode);
+    else if (NODE_TYPES.DOCUMENT) await departmentsService.createData(newNode);
+    else if (NODE_TYPES.OWNER) await ownerService.createData(newNode);
+    else if (NODE_TYPES.PROCESS) await processesService.createData(newNode);
+    else if (NODE_TYPES.TOOL) await toolsService.createData(newNode);
+
+    setNodes((nodes) => [...nodes, newNode]);
   };
 
   const ACTION_BUTTONS = [
@@ -105,7 +124,9 @@ export function BottomToolbar({ className }: BottomToolbarProps) {
                   "p-2 rounded cursor-pointer hover:bg-gray-100 hover:-translate-y-2 transition-all duration-300",
                   iconClasses
                 )}
-                onClick={() => onClick({ type, data })}
+                onClick={() =>
+                  onClick({ type, data, position: DEFAULT_POSITION })
+                }
               >
                 <Icon size={20} />
               </div>

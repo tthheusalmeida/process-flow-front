@@ -16,6 +16,7 @@ import { Label } from "../ui/label";
 
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
+import { departmentsService } from "@/app/services/departments";
 
 export function DepartmentEditModal() {
   const { isOpenDepartment, setIsOpenDepartment, nodeModalId } = useNodeModal();
@@ -38,7 +39,7 @@ export function DepartmentEditModal() {
     setIsOpenDepartment(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim()) {
@@ -46,6 +47,9 @@ export function DepartmentEditModal() {
     }
 
     updatePartialNodeData(department.id, { title });
+    await departmentsService.updateData(department.id, {
+      data: { ...department.data, title },
+    });
     setIsOpenDepartment(false);
   };
 

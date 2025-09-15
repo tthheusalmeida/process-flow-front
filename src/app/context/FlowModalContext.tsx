@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { createFlow, updateFlow } from "../services/flows";
+import { flowsService } from "../services/flows";
 import { useFlowsData } from "./FlowsDataContext";
 import { IFlow } from "@/app/services/flows";
 
@@ -21,6 +21,14 @@ interface FlowModalContextType {
   handleSubmit: (data: IFlowData) => void;
   onOpenChange: (open: boolean) => void;
 }
+
+const DEFAULT_NODES = {
+  departments: [],
+  documents: [],
+  owners: [],
+  processes: [],
+  tools: [],
+};
 
 const FlowModalContext = createContext<FlowModalContextType | undefined>(
   undefined
@@ -72,15 +80,17 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
         const newFlow: IFlow = {
           id: crypto.randomUUID(),
           title: data.title,
+          nodes: DEFAULT_NODES,
+          edges: [],
           createdAt: new Date(),
           updatedAt: new Date(),
         };
 
-        await createFlow(newFlow);
+        await flowsService.createData(newFlow);
         add(newFlow);
         setSelectedFlowId(newFlow.id);
       } else if (modalType === "edit" && data.id) {
-        await updateFlow(data.id, { title: data.title });
+        await flowsService.updateData(data.id, { title: data.title });
         update(data.id, { title: data.title });
       }
       closeModal();
