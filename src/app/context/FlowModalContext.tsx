@@ -39,7 +39,7 @@ interface FlowModalProviderProps {
 }
 
 export function FlowModalProvider({ children }: FlowModalProviderProps) {
-  const { add, update } = useFlowsData();
+  const { add, update, setSelectedFlowId } = useFlowsData();
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType | null>(null);
@@ -78,6 +78,7 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
 
         await createFlow(newFlow);
         add(newFlow);
+        setSelectedFlowId(newFlow.id);
       } else if (modalType === "edit" && data.id) {
         await updateFlow(data.id, { title: data.title });
         update(data.id, { title: data.title });

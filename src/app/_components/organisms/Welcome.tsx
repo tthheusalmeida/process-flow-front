@@ -33,7 +33,7 @@ export default function Welcome() {
             </div>
           ) : flows.length > 0 ? (
             <div className="space-y-4 text-center">
-              <p className="text-lg">Select a flow to get started.</p>
+              <p className="text-regular">Select a flow to get started.</p>
             </div>
           ) : (
             <div className="space-y-4 text-center">
