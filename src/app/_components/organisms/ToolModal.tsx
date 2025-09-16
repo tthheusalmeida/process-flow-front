@@ -17,6 +17,7 @@ import { Label } from "../ui/label";
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
 import { Trash } from "lucide-react";
+import { toolsService } from "@/app/services/tools";
 
 interface ToolItem {
   title: string;
@@ -65,13 +66,16 @@ export function ToolEditModal() {
     setIsOpenTool(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     const filteredTools = tools.filter((t) => t.title && t.description);
 
     updatePartialNodeData(tool.id, { title, tools: filteredTools });
+    await toolsService.updateData(tool.id, {
+      data: { ...tool.data, title, tools: filteredTools },
+    });
     setIsOpenTool(false);
   };
   return (
