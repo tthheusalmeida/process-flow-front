@@ -13,6 +13,7 @@ import { ownerService } from "@/app/services/owners";
 import { processesService } from "@/app/services/processes";
 import { toolsService } from "@/app/services/tools";
 import { useFlowsData } from "@/app/context/FlowsDataContext";
+import { getServiceByType } from "@/app/services";
 
 interface BottomToolbarProps {
   className?: string;
@@ -41,11 +42,8 @@ export function BottomToolbar({ className }: BottomToolbarProps) {
       updatedAt: new Date(),
     };
 
-    if (NODE_TYPES.DEPARTMENT) await documentsService.createData(newNode);
-    else if (NODE_TYPES.DOCUMENT) await departmentsService.createData(newNode);
-    else if (NODE_TYPES.OWNER) await ownerService.createData(newNode);
-    else if (NODE_TYPES.PROCESS) await processesService.createData(newNode);
-    else if (NODE_TYPES.TOOL) await toolsService.createData(newNode);
+    const service = getServiceByType(type);
+    await service.createData(newNode);
 
     setNodes((nodes) => [...nodes, newNode]);
   };

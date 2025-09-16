@@ -16,6 +16,7 @@ import { Label } from "../ui/label";
 
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
+import { ownerService } from "@/app/services/owners";
 
 export function OwnerEditModal() {
   const { isOpenOwner, setIsOpenOwner, nodeModalId } = useNodeModal();
@@ -40,7 +41,7 @@ export function OwnerEditModal() {
     setIsOpenOwner(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim()) return;
@@ -51,6 +52,9 @@ export function OwnerEditModal() {
       .filter(Boolean);
 
     updatePartialNodeData(owner.id, { title, owners: ownersArray });
+    await ownerService.updateData(owner.id, {
+      data: { ...owner.data, title, owners: ownersArray },
+    });
     setIsOpenOwner(false);
   };
 

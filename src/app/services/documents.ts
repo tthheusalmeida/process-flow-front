@@ -10,7 +10,7 @@ export interface IDocuments {
 
 class DocumentsService extends NodeBaseService<IDocuments> {
   constructor() {
-    super(`/${NODE_TYPES.DEPARTMENT}`, NODE_TYPES.DEPARTMENT);
+    super(`/${NODE_TYPES.DOCUMENT}`, NODE_TYPES.DOCUMENT);
   }
 }
 
