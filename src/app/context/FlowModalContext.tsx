@@ -78,7 +78,7 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
     try {
       if (modalType === "create") {
         const newFlow: IFlow = {
-          id: `${crypto.randomUUID()}-${new Date()}`,
+          id: `${crypto.randomUUID()}-${new Date().getTime()}`,
           title: data.title,
           ...DEFAULT_NODES,
           edges: [],
