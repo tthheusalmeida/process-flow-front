@@ -139,7 +139,7 @@ export default function BaseNode({
               <Handle
                 type="source"
                 position={Position.Right}
-                className="w-3 h-3 !border-none !-bottom-1.5 !rounded-full"
+                className="w-3 h-3 !border-none !-right-1.5 !rounded-full"
                 style={{ backgroundColor: handleColor }}
               />
             )}
