@@ -11,7 +11,6 @@ export function cn(...inputs: ClassValue[]) {
 export const getConnectionRules = (sourceType: string) => {
   switch (sourceType) {
     case NODE_TYPES.OWNER:
-      // Department and Owner connect BELOW the process (come from above)
       return {
         preferredHandle: "top",
         reasoning: `${sourceType} connects at the top of the process`,
@@ -19,7 +18,6 @@ export const getConnectionRules = (sourceType: string) => {
 
     case NODE_TYPES.DOCUMENT:
     case NODE_TYPES.TOOL:
-      // Document e Tool connect ABOVE the process (come from below)
       return {
         preferredHandle: "bottom",
         reasoning: `${sourceType} connects below the process`,
@@ -27,7 +25,6 @@ export const getConnectionRules = (sourceType: string) => {
 
     case NODE_TYPES.PROCESS:
     case NODE_TYPES.DEPARTMENT:
-      // Processes connect to each other laterally
       return {
         preferredHandle: "left",
         reasoning: "Process flow (process connects from the side)",
@@ -49,10 +46,6 @@ export const getBestProcessHandle = (
   if (targetNode.type !== NODE_TYPES.PROCESS) return undefined;
 
   const connectionRule = getConnectionRules(sourceNode.data.type as string);
-
-  console.log(
-    `🔗 Connecting ${sourceNode.data.type} -> ${targetNode.data.type}: ${connectionRule.reasoning}`
-  );
 
   const handleConnections = {
     left: 0,
@@ -101,11 +94,5 @@ export const getBestProcessHandle = (
       bestHandle = handle;
     }
   });
-
-  console.log(
-    `📍 Handle chosen: ${bestHandle} (${
-      handleConnections[bestHandle as keyof typeof handleConnections]
-    } connections)`
-  );
   return bestHandle;
 };

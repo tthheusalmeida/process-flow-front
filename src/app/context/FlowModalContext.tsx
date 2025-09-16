@@ -96,7 +96,6 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
       closeModal();
     } catch (error) {
       console.error("Error submitting form:", error);
-      // TODO: add toast when error occurs (toast, etc.)
     }
   };
 

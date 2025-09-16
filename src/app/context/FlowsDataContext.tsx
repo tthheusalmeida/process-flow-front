@@ -35,7 +35,7 @@ interface FlowsDataProviderProps {
 export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
   const { data: flowsData, isLoading: isLoadingFlows } = useTotalFlows();
   const { setNodesToFetch, setNodes } = useNode();
-  const {} = useEdge();
+  const { setEdgesToFetch, setEdges } = useEdge();
 
   const [flows, setFlows] = useState<IFlow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,22 +65,26 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
   useEffect(() => {
     if (selectedFlowId) {
       setNodes([]);
+      setEdges([]);
     }
+  }, [selectedFlowId, setNodes, setEdges]);
 
-    if (selectedFlowId && flowsData) {
-      const flow = flowsData.filter((f) => f.id === selectedFlowId)[0];
+  useEffect(() => {
+    if (!selectedFlowId || !flowsData) return;
 
-      const dataToFetch = {
-        departments: flow?.departments || [],
-        documents: flow?.documents || [],
-        owners: flow?.owners || [],
-        processes: flow?.processes || [],
-        tools: flow?.tools || [],
-      };
+    const flow = flowsData.find((f) => f.id === selectedFlowId);
+    if (!flow) return;
 
-      setNodesToFetch(() => dataToFetch);
-    }
-  }, [selectedFlowId, flowsData, setNodesToFetch, setNodes]);
+    setNodesToFetch({
+      departments: flow.departments || [],
+      documents: flow.documents || [],
+      owners: flow.owners || [],
+      processes: flow.processes || [],
+      tools: flow.tools || [],
+    });
+
+    setEdgesToFetch(flow.edges || []);
+  }, [selectedFlowId, flowsData, setNodesToFetch, setEdgesToFetch]);
 
   return (
     <FlowsDataContext.Provider

@@ -1,3 +1,5 @@
+import { useEdge } from "@/app/context/EdgesContext";
+import { edgesService } from "@/app/services/edges";
 import { EdgeProps, getSimpleBezierPath } from "@xyflow/react";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -9,6 +11,8 @@ export function CustomEdge({
   targetX,
   targetY,
 }: EdgeProps) {
+  const { edges, setEdges } = useEdge();
+
   const [hovered, setHovered] = useState(false);
   const [edgePath] = getSimpleBezierPath({
     sourceX,
@@ -17,9 +21,9 @@ export function CustomEdge({
     targetY,
   });
 
-  const onEdgeDelete = () => {
-    // TODO: delete edge from database
-    console.log(`Deleting edge ${id}`);
+  const onEdgeDelete = async () => {
+    await edgesService.deleteData(id);
+    setEdges((prev) => prev.filter((edge) => edge.id !== id));
   };
 
   return (
@@ -42,10 +46,10 @@ export function CustomEdge({
           requiredExtensions="http://www.w3.org/1999/xhtml"
         >
           <button
-            className="w-4 h-4 bg-neutral-700 hover:bg-red-600/10 text-red-400 rounded-full flex items-center justify-center text-xs transition-colors"
+            className="w-6 h-6 bg-destructive/80 hover:bg-destructive text-white rounded-full flex items-center justify-center text-xs transition-colors"
             onClick={onEdgeDelete}
           >
-            <X size={10} />
+            <X size={14} />
           </button>
         </foreignObject>
       )}

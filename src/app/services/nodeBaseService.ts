@@ -35,7 +35,7 @@ export class NodeBaseService<T> {
     return await response.json();
   }
 
-  async createData(newData: ICreate | T): Promise<T> {
+  async createData(newData: T | ICreate): Promise<T> {
     const url = process.env.NEXT_PUBLIC_BASE_URL + this.endPoint;
 
     const response = await fetch(url, {

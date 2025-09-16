@@ -35,10 +35,12 @@ import { DocumentEditModal } from "./DocumentModal";
 import { ToolEditModal } from "./ToolModal";
 import { BottomToolbar } from "./BottomToolbar";
 
-const { neutral } = colors;
-
 import { NODE_TYPES } from "@/lib/consts";
 import { getServiceByType } from "@/app/services";
+import { useFlowsData } from "@/app/context/FlowsDataContext";
+import { edgesService, IEdge } from "@/app/services/edges";
+
+const { neutral } = colors;
 
 const NODE_TYPES_MODAL = {
   [NODE_TYPES.DEPARTMENT]: NodeDepartment,
@@ -55,40 +57,46 @@ const EDGE_TYPES = {
 export default function CustomReactFlow() {
   const { nodes, onNodesChange } = useNode();
   const { edges, setEdges, onEdgesChange } = useEdge();
+  const { selectedFlowId } = useFlowsData();
 
   const onConnect = useCallback(
     (params: Connection) => {
-      // Validation: only allow connections TO process nodes
       const targetNode = nodes.find((node) => node.id === params.target);
-      if (targetNode?.type !== NODE_TYPES.PROCESS) {
-        console.log("❌ Connections are only allowed to process nodes");
-        return;
-      }
+      if (targetNode?.type !== NODE_TYPES.PROCESS) return;
 
       const sourceNode = nodes.find((node) => node.id === params.source);
       if (!sourceNode) return;
 
       const bestHandle = getBestProcessHandle(sourceNode, targetNode, edges);
 
-      const connectionParams = {
+      const connectionWithHandle: Edge = {
         ...params,
-        targetHandle: bestHandle,
+        id: crypto.randomUUID(),
+        targetHandle: bestHandle ?? null,
       };
 
       setEdges((edgesSnapshot) => {
-        const connectionWithHandle: Edge = {
-          ...params,
-          id: `${targetNode.id}-${sourceNode.id}`,
-          targetHandle: bestHandle ?? null,
-        };
-
-        const newEdges = addEdge(connectionWithHandle, edgesSnapshot);
-        // TODO: save new connection to database
-        console.log("✅ New connection created:", connectionWithHandle);
-        return newEdges;
+        const alreadyExists = edgesSnapshot.some(
+          (e) => e.id === connectionWithHandle.id
+        );
+        if (alreadyExists) return edgesSnapshot;
+        return addEdge(connectionWithHandle, edgesSnapshot);
       });
+
+      (async () => {
+        try {
+          await edgesService.createData({
+            ...connectionWithHandle,
+            flowId: selectedFlowId,
+          } as IEdge);
+        } catch {
+          setEdges((prev) =>
+            prev.filter((e) => e.id !== connectionWithHandle.id)
+          );
+        }
+      })();
     },
-    [nodes, edges, setEdges]
+    [selectedFlowId, nodes, edges, setEdges]
   );
 
   const handleNodesChange = useCallback(
@@ -106,11 +114,6 @@ export default function CustomReactFlow() {
   const handleEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
       onEdgesChange(changes);
-      // TODO: save edge changes to database
-      const removedEdges = changes.filter((change) => change.type === "remove");
-      if (removedEdges.length > 0) {
-        console.log("🗑️ Edges removed:", removedEdges);
-      }
     },
     [onEdgesChange]
   );

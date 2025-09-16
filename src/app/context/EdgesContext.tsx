@@ -5,14 +5,19 @@ import React, {
   useContext,
   Dispatch,
   SetStateAction,
+  useEffect,
+  useState,
 } from "react";
 
 import { useEdgesState, Edge, OnEdgesChange } from "@xyflow/react";
+import { edgesService, IEdge } from "../services/edges";
 
 interface EdgeContextType {
   edges: Edge[];
+  edgesToFetch: string[];
   setEdges: Dispatch<SetStateAction<Edge[]>>;
   onEdgesChange: OnEdgesChange;
+  setEdgesToFetch: (value: string[]) => void;
 }
 
 const EdgeContext = createContext<EdgeContextType | undefined>(undefined);
@@ -50,13 +55,38 @@ const initialEdges: Edge[] = [
 
 export function EdgesProvider({ children }: EdgeProviderProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [edgesToFetch, setEdgesToFetch] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!edgesToFetch || edgesToFetch.length === 0) return;
+
+    async function fetchEdges() {
+      const allResults = await Promise.all(
+        edgesToFetch.map(async (edge: string) => {
+          return edgesService.getDataById(edge);
+        })
+      );
+
+      const newNodes = allResults.flatMap((data: IEdge) => {
+        const { flowId, ...rest } = data;
+        return rest as Edge;
+      });
+
+      setEdges((prev) => [...prev, ...newNodes]);
+      setEdgesToFetch([]);
+    }
+
+    fetchEdges();
+  }, [edgesToFetch, setEdges]);
 
   return (
     <EdgeContext.Provider
       value={{
         edges,
+        edgesToFetch,
         setEdges,
         onEdgesChange,
+        setEdgesToFetch,
       }}
     >
       {children}
