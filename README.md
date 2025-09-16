@@ -17,6 +17,7 @@
 # 🗂️ Table of Contents
 
 - [About](#about)
+- [How To Use](#how-to-use)
 - [Scenario](#scenario)
 - [Technologies](#technologies)
 - [Architecture](#architecture)
@@ -41,6 +42,36 @@ Key features:
 - 🎨 Custom visual representation with icons, colors, and hierarchy levels.
 
 ---
+
+<a id="how-to-use"></a>
+
+## ⚙️ How to Use
+
+Clone the project:
+
+```
+git clone https://github.com/tthheusalmeida/process-flow-front.git
+```
+
+Install the dependencies:
+
+```
+npm install
+```
+
+Create a `.env` file in the root of the project with example environment variables:
+
+```.env
+NEXT_PUBLIC_BASE_URL=http://localhost:8080
+```
+
+Run code:
+
+```
+npm run start
+```
+
+> Note: You must run backend together!
 
 <a id="scenario"></a>
 
