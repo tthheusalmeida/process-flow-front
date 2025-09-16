@@ -80,7 +80,7 @@ export function FlowModalProvider({ children }: FlowModalProviderProps) {
         const newFlow: IFlow = {
           id: crypto.randomUUID(),
           title: data.title,
-          nodes: DEFAULT_NODES,
+          ...DEFAULT_NODES,
           edges: [],
           createdAt: new Date(),
           updatedAt: new Date(),

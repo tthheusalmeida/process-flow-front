@@ -7,11 +7,6 @@ import { useNode } from "@/app/context/NodesContext";
 
 import { NODE_TYPES } from "@/lib/consts";
 
-import { documentsService } from "@/app/services/documents";
-import { departmentsService } from "@/app/services/departments";
-import { ownerService } from "@/app/services/owners";
-import { processesService } from "@/app/services/processes";
-import { toolsService } from "@/app/services/tools";
 import { useFlowsData } from "@/app/context/FlowsDataContext";
 import { getServiceByType } from "@/app/services";
 

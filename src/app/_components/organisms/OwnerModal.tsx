@@ -16,7 +16,7 @@ import { Label } from "../ui/label";
 
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
-import { ownerService } from "@/app/services/owners";
+import { ownersService } from "@/app/services/owners";
 
 export function OwnerEditModal() {
   const { isOpenOwner, setIsOpenOwner, nodeModalId } = useNodeModal();
@@ -52,7 +52,7 @@ export function OwnerEditModal() {
       .filter(Boolean);
 
     updatePartialNodeData(owner.id, { title, owners: ownersArray });
-    await ownerService.updateData(owner.id, {
+    await ownersService.updateData(owner.id, {
       data: { ...owner.data, title, owners: ownersArray },
     });
     setIsOpenOwner(false);

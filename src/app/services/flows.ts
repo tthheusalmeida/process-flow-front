@@ -1,17 +1,13 @@
 import { NodeBaseService } from "./nodeBaseService";
 
-export interface IFlowNode {
+export interface IFlow {
+  id: string;
+  title: string;
   departments: string[];
   documents: string[];
   owners: string[];
   processes: string[];
   tools: string[];
-}
-
-export interface IFlow {
-  id: string;
-  title: string;
-  nodes: IFlowNode;
   edges: string[];
   createdAt: Date;
   updatedAt: Date;

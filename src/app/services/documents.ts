@@ -5,6 +5,7 @@ export interface IDocuments {
   id: string;
   title: string;
   data: object;
+  position: object;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -13,9 +13,9 @@ import HomeContent from "../_components/organisms/HomeContent";
 
 export default function HomeTemplate() {
   return (
-    <FlowsDataProvider>
-      <NodesProvider>
-        <EdgesProvider>
+    <NodesProvider>
+      <EdgesProvider>
+        <FlowsDataProvider>
           <ConfirmationModalProvider>
             <FlowModalProvider>
               <SidebarProvider>
@@ -27,8 +27,8 @@ export default function HomeTemplate() {
               </SidebarProvider>
             </FlowModalProvider>
           </ConfirmationModalProvider>
-        </EdgesProvider>
-      </NodesProvider>
-    </FlowsDataProvider>
+        </FlowsDataProvider>
+      </EdgesProvider>
+    </NodesProvider>
   );
 }

@@ -5,6 +5,7 @@ export interface IOwner {
   id: string;
   title: string;
   data: object;
+  position: object;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,4 +16,4 @@ class OwnerService extends NodeBaseService<IOwner> {
   }
 }
 
-export const ownerService = new OwnerService();
+export const ownersService = new OwnerService();

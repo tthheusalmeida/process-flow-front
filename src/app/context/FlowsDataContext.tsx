@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useTotalFlows } from "../_hooks/use-flows";
 import { IFlow } from "@/app/services/flows";
+import { useNode } from "./NodesContext";
+import { useEdge } from "./EdgesContext";
 
 interface FlowsDataContextType {
   flows: IFlow[];
@@ -32,6 +34,8 @@ interface FlowsDataProviderProps {
 
 export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
   const { data: flowsData, isLoading: isLoadingFlows } = useTotalFlows();
+  const { setNodesToFetch, setNodes } = useNode();
+  const {} = useEdge();
 
   const [flows, setFlows] = useState<IFlow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +61,26 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
       setIsLoading(false);
     }
   }, [flowsData, isLoadingFlows]);
+
+  useEffect(() => {
+    if (selectedFlowId) {
+      setNodes([]);
+    }
+
+    if (selectedFlowId && flowsData) {
+      const flow = flowsData.filter((f) => f.id === selectedFlowId)[0];
+
+      const dataToFetch = {
+        departments: flow?.departments || [],
+        documents: flow?.documents || [],
+        owners: flow?.owners || [],
+        processes: flow?.processes || [],
+        tools: flow?.tools || [],
+      };
+
+      setNodesToFetch(() => dataToFetch);
+    }
+  }, [selectedFlowId, flowsData, setNodesToFetch]);
 
   return (
     <FlowsDataContext.Provider

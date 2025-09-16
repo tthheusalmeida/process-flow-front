@@ -1,6 +1,6 @@
 import { departmentsService } from "@/app/services/departments";
 import { documentsService } from "@/app/services/documents";
-import { ownerService } from "@/app/services/owners";
+import { ownersService } from "@/app/services/owners";
 import { processesService } from "@/app/services/processes";
 import { toolsService } from "@/app/services/tools";
 
@@ -11,7 +11,7 @@ export function getServiceByType(type: string) {
 
   if (type === NODE_TYPES.DEPARTMENT) service = departmentsService;
   else if (type === NODE_TYPES.DOCUMENT) service = documentsService;
-  else if (type === NODE_TYPES.OWNER) service = ownerService;
+  else if (type === NODE_TYPES.OWNER) service = ownersService;
   else if (type === NODE_TYPES.PROCESS) service = processesService;
   else service = toolsService;
 
