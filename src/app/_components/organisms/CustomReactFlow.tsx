@@ -11,6 +11,7 @@ import {
   ConnectionMode,
   NodeChange,
   EdgeChange,
+  OnNodeDrag,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
@@ -37,6 +38,7 @@ import { BottomToolbar } from "./BottomToolbar";
 const { neutral } = colors;
 
 import { NODE_TYPES } from "@/lib/consts";
+import { getServiceByType } from "@/app/services";
 
 const NODE_TYPES_MODAL = {
   [NODE_TYPES.DEPARTMENT]: NodeDepartment,
@@ -92,16 +94,14 @@ export default function CustomReactFlow() {
   const handleNodesChange = useCallback(
     (changes: NodeChange[]) => {
       onNodesChange(changes);
-      // TODO: save node position changes to database
-      const positionChanges = changes.filter(
-        (change) => change.type === "position"
-      );
-      if (positionChanges.length > 0) {
-        console.log("📍 Node positions updated:", positionChanges);
-      }
     },
     [onNodesChange]
   );
+
+  const handleNodeDragStop: OnNodeDrag = async (_, node) => {
+    const service = getServiceByType(node.type as string);
+    await service.updateData(node.id, { position: node.position });
+  };
 
   const handleEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
@@ -127,6 +127,7 @@ export default function CustomReactFlow() {
           proOptions={{ hideAttribution: true }}
           onNodesChange={handleNodesChange}
           onEdgesChange={handleEdgesChange}
+          onNodeDragStop={handleNodeDragStop}
           onConnect={onConnect}
           connectionMode={ConnectionMode.Loose}
           defaultEdgeOptions={{ type: "default" }}
