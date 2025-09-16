@@ -80,7 +80,7 @@ export function FlowsDataProvider({ children }: FlowsDataProviderProps) {
 
       setNodesToFetch(() => dataToFetch);
     }
-  }, [selectedFlowId, flowsData, setNodesToFetch]);
+  }, [selectedFlowId, flowsData, setNodesToFetch, setNodes]);
 
   return (
     <FlowsDataContext.Provider
