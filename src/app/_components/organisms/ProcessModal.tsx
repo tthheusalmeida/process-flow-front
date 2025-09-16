@@ -17,6 +17,7 @@ import { Label } from "../ui/label";
 import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
 import { Textarea } from "../ui/textarea";
+import { processesService } from "@/app/services/processes";
 
 export function ProcessEditModal() {
   const { isOpenProcess, setIsOpenProcess, nodeModalId } = useNodeModal();
@@ -43,12 +44,15 @@ export function ProcessEditModal() {
     setIsOpenProcess(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim()) return;
 
     updatePartialNodeData(process.id, { title, description });
+    await processesService.updateData(process.id, {
+      data: { ...process.data, title, description },
+    });
     setIsOpenProcess(false);
   };
 
