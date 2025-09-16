@@ -28,7 +28,7 @@ export function BottomToolbar({ className }: BottomToolbarProps) {
     const { type, data, position } = options;
 
     const newNode = {
-      id: crypto.randomUUID(),
+      id: `${crypto.randomUUID()}-${new Date()}`,
       flowId: selectedFlowId,
       position,
       type,

@@ -71,7 +71,7 @@ export default function CustomReactFlow() {
 
       const connectionWithHandle: Edge = {
         ...params,
-        id: crypto.randomUUID(),
+        id: `${crypto.randomUUID()}-${new Date()}`,
         targetHandle: bestHandle ?? null,
       };
 
