@@ -1,12 +1,5 @@
 import { ICreate } from "./constants";
 
-export interface INode {
-  id: string;
-  title: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export class NodeBaseService<T> {
   private endPoint: string;
   private type: string;
