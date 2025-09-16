@@ -18,6 +18,8 @@ import { useNodeModal } from "@/app/context/NodesModalContext";
 import { useNode } from "@/app/context/NodesContext";
 import { Trash } from "lucide-react";
 
+import { documentsService } from "@/app/services/documents";
+
 interface LinkItem {
   label: string;
   link: string;
@@ -66,13 +68,16 @@ export function DocumentEditModal() {
     setIsOpenDocument(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     const filteredLinks = links.filter((l) => l.label && l.link);
 
     updatePartialNodeData(document.id, { title, links: filteredLinks });
+    await documentsService.updateData(document.id, {
+      data: { ...document.data, title, links: filteredLinks },
+    });
     setIsOpenDocument(false);
   };
 

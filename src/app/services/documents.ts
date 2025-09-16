@@ -4,6 +4,7 @@ import { NodeBaseService } from "./nodeBaseService";
 export interface IDocuments {
   id: string;
   title: string;
+  data: object;
   createdAt: Date;
   updatedAt: Date;
 }
