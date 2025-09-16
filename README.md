@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center" style="font-size: 64px">
+  Process Flow
+</h1>
 
-## Getting Started
+<p align="center">is a tool to map and visualize company processes, subprocesses, tools, and responsibilities in an interactive way. </p>
 
-First, run the development server:
+<p align="center">
+   <img src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/tthheusalmeida/process-flow-front/">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" target="_blank" />
+  </a>
+  <a href="https://github.com/tthheusalmeida/process-flow-front/blob/main/LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" target="_blank" />
+  </a>
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# 🗂️ Table of Contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [About](#about)
+- [Scenario](#scenario)
+- [Technologies](#technologies)
+- [Architecture](#architecture)
+- [Entities](#entities)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<a id="about"></a>
 
-## Learn More
+## 📚 About
 
-To learn more about Next.js, take a look at the following resources:
+**Process Flow** was built to solve a common challenge in growing companies: the lack of clear documentation and visualization of internal processes.  
+The platform allows mapping of **departments, processes, subprocesses, tools, documents, and responsible people**, with a visual representation of the workflow.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Key features:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 📌 Register **areas/departments** and associate them with processes.
+- 🧩 Create **processes** with unlimited levels of subprocesses.
+- 🔗 Define relationships between department, processes, documents, owners, and tools.
+- 📑 Attach department, documents, owners, and tools used in each process.
+- 🕹️ Visualize the process hierarchy in an **interactive graph** using drag-and-drop.
+- 🎨 Custom visual representation with icons, colors, and hierarchy levels.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<a id="scenario"></a>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏢 Scenario
+
+The project addresses the following **business problem**:
+
+> Growing companies often face disorganized internal processes and lack of proper documentation, making it hard to identify workflows, tools in use, responsibilities, and dependencies.
+
+**Process Flow** solves this by providing a platform where companies can:
+
+- Organize processes hierarchically.
+- Clearly document dependencies, responsibilities, and resources.
+- Visualize the entire process structure in an intuitive, graphical way.
+
+Example: **People Department**
+
+- **Process: Recruitment & Selection**
+  - Subprocesses: Define profile, Job posting, Resume screening, Interviews, Offer.
+  - Tools: Trello (candidate management), Notion (job descriptions).
+  - Owners: Recruitment team.
+  - Docs: Hiring flow, interview guides.
+
+<img alt="Process: Recruitment & Selection" width="100%" title="#process-1" src="public/process-1.PNG">
+
+---
+
+<a id="technologies"></a>
+
+## 🚀 Technologies
+
+### **Frontend**
+
+- [React 19](https://react.dev/)
+- [Next.js 15](https://nextjs.org/)
+- [TailwindCSS 4](https://tailwindcss.com/)
+- [SWR](https://swr.vercel.app/)
+- [Shadcn](https://ui.shadcn.com/docs/installation/next) components (Dialog, Dropdown, Tooltip, etc.)
+- [Lucide React](https://lucide.dev/) (icons)
+- [React Flow](https://xyflow.com/) (graph visualization library)
+
+### **Backend** [->](https://github.com/tthheusalmeida/process-flow-back)
+
+> Note: This code should run together with the backend
+
+---
+
+<a id="architecture"></a>
+
+## 🏗️ Architecture
+
+The system is structured in three layers: **Frontend**, **Backend (external API)**, and **Database**.
+
+- **Frontend (Next.js + React Flow + TailwindCSS)**
+
+  - Handles UI, drag-and-drop graph, and interactive navigation.
+  - Uses SWR for fetching backend data.
+  - Shadcn UI for accessible components (modals, dropdowns, tooltips).
+
+- **Backend ([separate repository](https://github.com/tthheusalmeida/process-flow-back))**
+
+  - Provides REST endpoints for processes, processes, documents, tools, and owners.
+  - Manages business logic and persistence in memory.
+
+- **Database**
+  - There is no database, since this is a study case.
+
+---
+
+<a id="entities"></a>
+
+## 🧩 Entities
+
+- **Flow** → Metadata container for assembling the full graph.
+- **Node** → Represents one of the following types:
+  - `Department`
+  - `Document`
+  - `Process`
+  - `Owner`
+  - `Tool`
+- **Edge** → Connection between nodes.
+
+### Rules of relationships
+
+- A **Process** can connect to any node (including another Process).
+- **Department**, **Document**, **Owner**, and **Tool** always connect to a **Process**.
+
+---
+
+## 📝 License
+
+This project is under the MIT license.  
+See the [license page](https://opensource.org/licenses/MIT) for more details.
